@@ -32,11 +32,11 @@ if($func == 'getMethods' && isset($_GET['srv']) && isset($_GET['path']) && isset
         foreach($result as $m)
         {
             if($methods!="") $methods .= ", ";
-            $methods = '{"name" : "'.$m['method'].'", "ret" : "'.$m['return'].'",
+            $methods .= '{"name" : "'.$m['method'].'", "ret" : "'.$m['return'].'",
                 "param" : "'.$m['param'].'", "help" : "'.$m['help'].'"}';
         }
 
-        $json = '{"success" : "true", "methods" : [$methods]}';
+        $json = '{"success" : "true", "methods" : ['.$methods.']}';
     }
 
     echo $json;
