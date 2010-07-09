@@ -40,8 +40,6 @@ echo "<strong>output</strong><br />";
 echo "<textarea id='out' name='out' rows='5'></textarea>";
 echo "</div>";
 
-getMethods("www.tu-chemnitz.de", "/verwaltung/vlvz/xmlrpc.php", 80);
-
 // footer
 echo "<div class='footer'>xmlrpc test-tool | by tom schreiber | $VERSION</div>";
 
