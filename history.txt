@@ -1,0 +1,20 @@
+xmlrpc-test-tool history
+------------------------
+
+v0.5
+ - many improvments on the UI
+ - UI is useable now
+
+v0.4
+ - simple html-site with js to interact with php-ajax-interface
+   (not useable yet)
+ - use library 'jquery' and 'jquery-ui'
+
+v0.3
+ - php-ajax-interface
+ - support of "system.listMethods" to get a list of all supported methods with
+   parameters and help-text from server
+
+v0.1/v0.2
+ - php-functions for sending/receiving xmlrpc-requests
+ - use library 'phpxmlrpc'
