@@ -85,9 +85,9 @@ function callServer($server, $path, $port, $method, $params='')
            "err" => "Could not connect to server.");
     elseif ($result->faultCode())
        $ret_array = array('success'=>false,
-               "err" => "XML-RPC Fault #".$result->faultCode().": ".$result->faultString());
+               "err" => "XML-RPC Fault #".$result->faultCode()." : ".$result->faultString());
     else
-       $ret_array = array('success'=>true, "xmlrpcval" => $result->value()->scalarVal());
+       $ret_array = array('success'=>true, "xmlrpc" => $result);
 
     // resturn response-array
     return $ret_array;
@@ -109,12 +109,13 @@ function getMethods($server, $path, $port)
     // get response from server
     $func = "system.listMethods";
     $response = callServer($server, $path, $port, $func);
+    $xmlrpc = $response['xmlrpc']->value()->scalarVal();
 
     // put response in array
     if($response['success'])
     {
         $result=array();
-        foreach ($response['xmlrpcval'] as $xmlrpcval)
+        foreach ($xmlrpc as $xmlrpcval)
         {
             $method = $xmlrpcval->scalarVal();
 

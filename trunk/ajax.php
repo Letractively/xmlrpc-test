@@ -43,9 +43,30 @@ if($func == 'getMethods' && isset($_GET['srv']) && isset($_GET['path']) && isset
 }
 
 // get response from server
-if($func == 'getResponse' && isset($_GET['srv']) && isset($_GET['prt']) && isset($_GET['m']) && isset($_GET['p']) )
+if($func == 'getResponse' && isset($_GET['srv']) && isset($_GET['path']) && isset($_GET['prt']) && isset($_GET['m']) )
 {
+    require_once 'lib/xmlrpc.inc';
 
+    // get response-array
+    $result = callServer($_GET['srv'], $_GET['path'], $_GET['prt'], $_GET['m'], array());
+
+
+    // check for success
+    if($result['success'] == false)
+    {
+        // set err-text in JSON
+        $json = '{"success" : "false", "err" : "'.$result['err'].'" }';
+    }
+    else
+    {
+        // serialize response
+        $response =  json_encode($result['xmlrpc']->value()->serialize());
+
+        // convert array to json-format
+        $json = '{"success" : "true", "response" : '.$response.'}';
+    }
+
+    echo $json;
 }
 
 ?>
