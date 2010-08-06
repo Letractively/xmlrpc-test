@@ -16,6 +16,9 @@ $(document).ready(function()
 
     // set function to drop-down-list
     $('#methodList').change(setListSelection);
+
+    // reset form (necessary after reload)
+    resetForm();
 });
 
 

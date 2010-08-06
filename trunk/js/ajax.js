@@ -1,20 +1,22 @@
 // global vars
 var MethodList;
-var currentFieldID = 1;
+var currentFieldID;
 
 // get methods and info from server
 function getMethods()
 {
-    // get server vars
-    var server= $("#server_adress").val();
-    var path = $('#server_path').val();
-    var port = $('#server_port').val();
+    // get server-url
+    var server= $("#server_url").val();
 
     // show loading-picture
     $('#load_image').show();
 
+    // set empty error and info-text
+    setError('');
+    setInfo('');
+
     // get array
-    $.getJSON( "ajax.php", {f: "getMethods", srv: server, path: path, prt: port},
+    $.getJSON( "ajax.php", {f: "getMethods", srv: server},
         function(json)
         {
             // check json-return-value
@@ -26,7 +28,6 @@ function getMethods()
                 else
                 {
                   //allright, we got the methods
-                  setError('');
                   MethodList = json.methods;
                   setMethodsToListbox();
                 }
@@ -63,17 +64,27 @@ function setMethodsToListbox()
 // get a response for a method from server
 function getResponse()
 {
-    // get server vars
-    var server= $("#server_adress").val();
-    var path = $('#server_path').val();
-    var port = $('#server_port').val();
+    // get server-url and method-name
+    var server= $("#server_url").val();
     var method = $('#method').val();
+
+    // prepare param-array
+    var params = new Array();
+    for(i=1; i <= currentFieldID; i++)
+    {
+        params.push('string');
+        params.push($(":input[name='param" + i + "']").val());
+    }
 
     // show loading-picture
     $('#load_image').show();
 
-    // get array
-    $.getJSON( "ajax.php", {f: "getResponse", srv: server, path: path, prt: port, m: method},
+    // set empty error and info-text
+    setError('');
+    setInfo('');
+
+    // send json-request
+    $.getJSON( "ajax.php", {f: "getResponse", srv: server, m: method, p: params},
         function(json)
         {
             // check json-return-value
@@ -85,7 +96,6 @@ function getResponse()
                 else
                 {
                   //allright, we got the methods
-                  setError('');
                   $('#outbox').val(json.response);
                 }
 
@@ -149,9 +159,8 @@ function removeParamField()
 // clears all parameters
 function clearParamList()
 {
-    var listlen = currentFieldID;
-    for(i=0; i < listlen; i++)
-        removeParamField();
+    currentFieldID = 0;
+    $('#params').html("no parameter : ()");
 }
 
 // set list-selection
@@ -233,5 +242,29 @@ function trim (str)
   return str.replace (/^\s+/, '').replace (/\s+$/, '');
 }
 
+// reset form
+function resetForm()
+{
+     // reset global currentFieldID to 1
+    currentFieldID = 1;
 
+    // reset param-fields
+    $('#params').html("<div id='param1'>param 1 <br/>" +
+                    "<input type='text' name='param1' /></div>");
 
+    // reset MethodList
+    MethodList = new Array();
+
+    // clear methodname and enable editing
+    $('#method').val('');
+    $('#method').removeAttr("disabled");
+
+    // enable buttons
+    $('#button_add').button( "option", "disabled", false );
+    $('#button_remove').button( "option", "disabled", false );
+    $("#button_send").button( "option", "disabled", false );
+
+    // set names to defaults
+    $('#method_name').html('custom method');
+    $('#output_name').html('output');
+}

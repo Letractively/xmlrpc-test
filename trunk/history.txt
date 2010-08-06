@@ -1,6 +1,12 @@
 xmlrpc-test-tool history
 ------------------------
 
+v0.5.1
+ - set now complete url (not server,path and port anymore)
+ - reset form after reload
+ - removed bug: ajax-interface return no valid json-response on server-error
+ - removed bug: parameters are not given correctly to server
+
 v0.5
  - many improvments on the UI
  - UI is useable now

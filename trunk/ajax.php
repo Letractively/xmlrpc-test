@@ -14,16 +14,16 @@ else
     $func = '';
 
 // get xmlrpc-method-list from server
-if($func == 'getMethods' && isset($_GET['srv']) && isset($_GET['path']) && isset($_GET['prt']) )
+if($func == 'getMethods' && isset($_GET['srv']) )
 {
     // get method-array
-    $result = getMethods($_GET['srv'], $_GET['path'], $_GET['prt']);
+    $result = getMethods($_GET['srv']);
 
     // check for success
     if(!is_array($result))
     {
         // set err-text in JSON
-        $json = '{"success" : "false", "err" : "'.$result.'" }';
+        $json = '{"success" : "false", "err" : '.json_encode($result).' }';
     }
     else
     {
@@ -32,8 +32,10 @@ if($func == 'getMethods' && isset($_GET['srv']) && isset($_GET['path']) && isset
         foreach($result as $m)
         {
             if($methods!="") $methods .= ", ";
-            $methods .= '{"name" : "'.$m['method'].'", "ret" : "'.$m['return'].'",
-                "param" : "'.$m['param'].'", "help" : "'.$m['help'].'"}';
+            $methods .= '{"name" : '.json_encode($m['method']).
+                ', "ret" : '.json_encode($m['return']).
+                ', "param" : '.json_encode($m['param']).
+                ', "help" : '.json_encode($m['help']).'}';
         }
 
         $json = '{"success" : "true", "methods" : ['.$methods.']}';
@@ -43,19 +45,27 @@ if($func == 'getMethods' && isset($_GET['srv']) && isset($_GET['path']) && isset
 }
 
 // get response from server
-if($func == 'getResponse' && isset($_GET['srv']) && isset($_GET['path']) && isset($_GET['prt']) && isset($_GET['m']) )
+if($func == 'getResponse' && isset($_GET['srv']) && isset($_GET['m']) )
 {
     require_once 'lib/xmlrpc.inc';
 
-    // get response-array
-    $result = callServer($_GET['srv'], $_GET['path'], $_GET['prt'], $_GET['m'], array());
+    // prepare parameter-array
+    $params = array();
+    if(isset($_GET['p']) && is_array($_GET['p']))
+    {
+        $params_raw = $_GET['p'];
+        for ($i = 0; $i < count($params_raw); $i=$i+2)
+            array_push($params, array('type' => $params_raw[$i], 'value'=>$params_raw[$i+1]));
+    }
 
+    // get response-array
+    $result = callServer($_GET['srv'], $_GET['m'], $params);
 
     // check for success
     if($result['success'] == false)
     {
         // set err-text in JSON
-        $json = '{"success" : "false", "err" : "'.$result['err'].'" }';
+        $json = '{"success" : "false", "err" : '.json_encode($result['err']).' }';
     }
     else
     {
