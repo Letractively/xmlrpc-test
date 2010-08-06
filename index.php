@@ -1,10 +1,11 @@
 <?php
-         
+// $Id$
+
 // IMPORT
 require_once 'functions.php';
 
 // VARS
-$VERSION = "0.5.0";
+$VERSION = "0.5.1";
 
 // write html-header
 $css = array('css/style.css', 'css/ui-darkness/jquery-ui-1.8.2.custom.css');
@@ -14,19 +15,13 @@ echo writeXHTMLHeader("xmlrpc-test-tool", $css, $js);
 
 // title / begin of container
 echo "<div id='container'>";
-echo "<img id='load_image' src='./css/img/ajax_loader.gif' alt='Loading...' />";
+echo "<img id='load_image' src='./css/img/loading.gif' alt='Loading...' />";
 echo "<h1 id='head'>xmlrpc-test-tool</h1>";
 
-// input for server
+// input for server-url
 echo "<div id='server'>";
-echo "<div class='info'>";
-echo "<label id='label_adress' for='server_adress'>XMLRPC-Server</label>";
-echo "<label id='label_path' for='server_path'>Path</label>";
-echo "<label id='label_port' for='server_port'>Port</label></div>";
-echo "<div class='field'>";
-echo "<input id='server_adress' type='text' />";
-echo "<input id='server_path' type='text'/>";
-echo "<input id='server_port' type='text' value='80' /></div>";
+echo "<label for='server_url'>XMLRPC-Server</label><br />";
+echo "<input id='server_url' type='text' />";
 echo "</div>";
 
 // controls

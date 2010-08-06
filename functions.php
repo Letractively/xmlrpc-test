@@ -45,9 +45,7 @@ function writeXHTMLFooter()
 /**
  *  callServer($server, $port, $method, $params)
  *
- * @param      $server  server
- * @param      $path    server-path
- * @param      $port    server-port
+ * @param      $url     server-url
  * @param      $method  method-name
  * @param      $params  method-params
  *
@@ -55,19 +53,20 @@ function writeXHTMLFooter()
  *              if 'success'==true -> xmlrpcval is given as 'xmlrpcval'
  *              otherwise you got an error-text as 'err'
 */
-function callServer($server, $path, $port, $method, $params='')
+function callServer($url, $method, $params='')
 {
     require_once 'lib/xmlrpc.inc';
 
     // init client with server-parameters
-    $client = new xmlrpc_client($path, $server, $port);
-
+    $client = new xmlrpc_client($url);
+    // $client->setDebug(2);
+    
     // prepare parameters (if needed)
     $parameter_valid = array();
     if(is_array($params))
     {
         foreach($params as $value)
-            array_push($parameter_valid, new xmlrpcval($value['value'], $value['key']));
+            array_push($parameter_valid, new xmlrpcval($value['value'], $value['type']));
     }
     
     // prepare message for server (w/ ord w/o parameters)
@@ -96,45 +95,43 @@ function callServer($server, $path, $port, $method, $params='')
 /**
  *  getMethods($server, $port)
  *
- * @param      $server  server-adress
- * @param      $path    server-path
- * @param      $port    server-port
+ * @param      $url     server-url
  *
  * @return     (string) methodarray
 */
-function getMethods($server, $path, $port)
+function getMethods($url)
 {
     require_once 'lib/xmlrpc.inc';
 
     // get response from server
     $func = "system.listMethods";
-    $response = callServer($server, $path, $port, $func);
-    $xmlrpc = $response['xmlrpc']->value()->scalarVal();
+    $response = callServer($url, $func);
 
     // put response in array
     if($response['success'])
     {
         $result=array();
+        $xmlrpc = $response['xmlrpc']->value()->scalarVal();
         foreach ($xmlrpc as $xmlrpcval)
         {
             $method = $xmlrpcval->scalarVal();
 
              // get signature of method
             $func = "system.methodSignature";
-            $res_sig = callServer($server, $path, $port, $func, array(array("type" => "string", "value" => $method)));
+            $res_sig = callServer($url, $func, array(array("type" => "string", "value" => $method)));
             $sig = "";
             $ret = "";
 
             // format signature
-            if ($res_sig['success'] && is_array($res_sig['xmlrpcval']))
+            $result_scalar = $res_sig['xmlrpc']->value()->scalarVal();
+            if ($res_sig['success'] && is_array($result_scalar))
             {
-                $param_array = $res_sig['xmlrpcval'][0]->scalarVal();
+                $param_array = $result_scalar[0]->scalarVal();
 
                 //Erster Parameter ist Rückgabetyp
                 $ret = $param_array[0]->scalarVal();
 
-                // Restliche Parameter sind Aufrufparameter
-                
+                // Restliche Parameter sind Aufrufparameter                
                 for($i=1; $i < count($param_array); $i++)
                 {
                     if($i > 1) $sig .= ", ";
@@ -144,11 +141,11 @@ function getMethods($server, $path, $port)
 
             //get description of method
             $func = "system.methodHelp";
-            $res_doc = callServer($server, $path, $port, $func, array(array("type" => "string", "value" => $method)));
+            $res_doc = callServer($url, $func, array(array("type" => "string", "value" => $method)));
             $doc = "";
 
             // check success of response and get documentation
-            if($res_doc['success']) $doc = $res_doc['xmlrpcval'];
+            if($res_doc['success']) $doc = $res_doc['xmlrpc']->value()->scalarVal();
 
             // push results in array
             array_push($result, array('method' => $method, 'return' => $ret, 'param' => $sig, 'help' => $doc ));

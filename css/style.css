@@ -25,34 +25,15 @@ body {
     float: right;
 }
 
-#server .info {
+#server label {
     font-weight: bold;
-}
-
-#server .info label {
-    display: inline-block;
-    margin-right: 25px;
     margin-bottom: 5px;
 }
 
-#server .field input {
+
+#server input {
     padding: 5px;
-    margin-right: 10px;
-}
-
-#server_adress, #label_adress {
-        width: 210px;
-
-}
-
-#server_path, #label_path {
-        width: 328px;
-
-}
-
-#server_port, #label_port {
-        width: 40px;
-        margin-right: 0 !important;
+    width: 625px;
 }
 
 #controls {
