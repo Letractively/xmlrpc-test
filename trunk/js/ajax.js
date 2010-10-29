@@ -46,7 +46,8 @@ function setMethodsToListbox()
 {
     //@todo: check list
 
-    //@todo: clear list
+    // clear list
+    $('#methodList').children().remove();
     
     // fill
     $.each(MethodList, function(index, itemData)

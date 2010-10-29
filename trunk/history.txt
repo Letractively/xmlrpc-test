@@ -1,6 +1,9 @@
 xmlrpc-test-tool history
 ------------------------
 
+v0.5.2
+ - clears method-list before get methods from server
+
 v0.5.1
  - set now complete url (not server,path and port anymore)
  - reset form after reload
