@@ -5,7 +5,7 @@
 require_once 'functions.php';
 
 // VARS
-$VERSION = "0.5.1";
+$VERSION = "0.5.2";
 
 // write html-header
 $css = array('css/style.css', 'css/ui-darkness/jquery-ui-1.8.2.custom.css');
