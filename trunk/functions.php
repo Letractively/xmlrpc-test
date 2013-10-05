@@ -135,7 +135,7 @@ function getMethods($url)
                 for($i=1; $i < count($param_array); $i++)
                 {
                     if($i > 1) $sig .= ", ";
-                    $sig .= $param_array[1]->scalarVal();
+                    $sig .= $param_array[$i]->scalarVal();
                 }
             }
 
